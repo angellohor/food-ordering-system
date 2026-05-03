@@ -8,7 +8,8 @@ import com.food.ordering.system.order.service.domain.entity.Restaurant;
 import com.food.ordering.system.order.service.domain.event.OrderCreatedEvent;
 import com.food.ordering.system.order.service.domain.exception.OrderDomainException;
 import com.food.ordering.system.order.service.domain.mapper.OrderDataMapper;
-import com.food.ordering.system.order.service.domain.ports.output.repository.CustomerRespository;
+import com.food.ordering.system.order.service.domain.ports.output.message.publisher.payment.OrderCreatedPaymentRequestMessagePublisher;
+import com.food.ordering.system.order.service.domain.ports.output.repository.CustomerRepository;
 import com.food.ordering.system.order.service.domain.ports.output.repository.OrderRepository;
 import com.food.ordering.system.order.service.domain.ports.output.repository.RestaurantRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -22,26 +23,30 @@ import java.util.UUID;
 @Component
 public class OrderCreateHelper {
 
-    private OrderDomainService orderDomainService;
+    private final OrderDomainService orderDomainService;
 
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
-    private CustomerRespository customerRespository;
+    private final CustomerRepository customerRepository;
 
-    private RestaurantRepository restaurantRepository;
+    private final RestaurantRepository restaurantRepository;
 
-    private OrderDataMapper orderDataMapper;
+    private final OrderDataMapper orderDataMapper;
+
+    private final OrderCreatedPaymentRequestMessagePublisher orderCreatedEventDomainEventPublisher;
 
     public OrderCreateHelper(OrderDomainService orderDomainService,
                              OrderRepository orderRepository,
-                             CustomerRespository customerRespository,
+                             CustomerRepository customerRepository,
                              RestaurantRepository restaurantRepository,
-                             OrderDataMapper orderDataMapper) {
+                             OrderDataMapper orderDataMapper,
+                             OrderCreatedPaymentRequestMessagePublisher orderCreatedEventDomainEventPublisher) {
         this.orderDomainService = orderDomainService;
         this.orderRepository = orderRepository;
-        this.customerRespository = customerRespository;
+        this.customerRepository = customerRepository;
         this.restaurantRepository = restaurantRepository;
         this.orderDataMapper = orderDataMapper;
+        this.orderCreatedEventDomainEventPublisher = orderCreatedEventDomainEventPublisher;
     }
 
     @Transactional
@@ -50,7 +55,7 @@ public class OrderCreateHelper {
         Restaurant restaurant = checkRestaurant(createOrderCommand);
         Order order = orderDataMapper.createOrderCommandToOrder(createOrderCommand);
 
-        OrderCreatedEvent orderCreatedEvent = orderDomainService.validateAndInitiateOrder(order, restaurant);
+        OrderCreatedEvent orderCreatedEvent = orderDomainService.validateAndInitiateOrder(order, restaurant, orderCreatedEventDomainEventPublisher);
         saveOrder(order);
         log.info("Order is crated with id: {}", order.getId().getValue());
         return orderCreatedEvent;
@@ -67,7 +72,7 @@ public class OrderCreateHelper {
     }
 
     private void checkCustomer(UUID customerId) {
-        Optional<Customer> customer = customerRespository.findCustomer(customerId);
+        Optional<Customer> customer = customerRepository.findCustomer(customerId);
         if (customer.isEmpty()){
             log.warn("Couldn't find the customer with id: {}", customerId);
             throw new OrderDomainException("Couldn't find the customer with id: " + customerId);

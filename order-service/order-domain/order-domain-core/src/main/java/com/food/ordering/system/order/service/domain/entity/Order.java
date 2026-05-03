@@ -21,6 +21,8 @@ public class Order extends AggregateRoot<OrderId> {
     private OrderStatus orderStatus;
     private List<String> failureMessages;
 
+    public static final String FAILURE_MESSAGE_DELIMITER = ",";
+
     public void initializeOrder(){
         setId(new OrderId(UUID.randomUUID()));
         trackingId = new TrackingId(UUID.randomUUID());
@@ -162,7 +164,7 @@ public class Order extends AggregateRoot<OrderId> {
     }
 
     public static final class Builder {
-        private OrderId orderId;
+        public OrderId orderId;
         private CustomerId customerId;
         private RestaurantId restaurantId;
         private StreetAddress deliveryAddress;
@@ -175,7 +177,7 @@ public class Order extends AggregateRoot<OrderId> {
         private Builder() {
         }
 
-        public Builder id(OrderId val) {
+        public Builder orderId(OrderId val) {
             orderId = val;
             return this;
         }
