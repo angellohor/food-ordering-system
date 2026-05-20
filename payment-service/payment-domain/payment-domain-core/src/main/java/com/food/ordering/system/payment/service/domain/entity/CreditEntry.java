@@ -1,8 +1,8 @@
 package com.food.ordering.system.payment.service.domain.entity;
 
 import com.food.ordering.system.domain.entity.BaseEntity;
-import com.food.ordering.system.domain.valueobjects.CustomerId;
-import com.food.ordering.system.domain.valueobjects.Money;
+import com.food.ordering.system.domain.valueobject.CustomerId;
+import com.food.ordering.system.domain.valueobject.Money;
 import com.food.ordering.system.payment.service.domain.valueobject.CreditEntryId;
 
 public class CreditEntry extends BaseEntity<CreditEntryId> {

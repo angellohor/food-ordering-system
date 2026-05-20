@@ -1,8 +1,8 @@
 package com.food.ordering.system.payment.service.domain.entity;
 
 import com.food.ordering.system.domain.entity.BaseEntity;
-import com.food.ordering.system.domain.valueobjects.CustomerId;
-import com.food.ordering.system.domain.valueobjects.Money;
+import com.food.ordering.system.domain.valueobject.CustomerId;
+import com.food.ordering.system.domain.valueobject.Money;
 import com.food.ordering.system.payment.service.domain.valueobject.CreditHistoryId;
 import com.food.ordering.system.payment.service.domain.valueobject.TransactionType;
 
@@ -48,7 +48,7 @@ public class CreditHistory extends BaseEntity<CreditHistoryId> {
             return new Builder();
         }
 
-        public Builder id(CreditHistoryId val) {
+        public Builder creditHistoryId(CreditHistoryId val) {
             creditHistoryId = val;
             return this;
         }

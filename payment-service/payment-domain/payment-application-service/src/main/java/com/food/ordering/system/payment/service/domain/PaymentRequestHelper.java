@@ -1,12 +1,11 @@
 package com.food.ordering.system.payment.service.domain;
 
-import com.food.ordering.system.domain.valueobjects.CustomerId;
+import com.food.ordering.system.domain.valueobject.CustomerId;
 import com.food.ordering.system.payment.service.domain.dto.PaymentRequest;
 import com.food.ordering.system.payment.service.domain.entity.CreditEntry;
 import com.food.ordering.system.payment.service.domain.entity.CreditHistory;
 import com.food.ordering.system.payment.service.domain.entity.Payment;
 import com.food.ordering.system.payment.service.domain.event.PaymentEvent;
-import com.food.ordering.system.payment.service.domain.event.PaymentFailedEvent;
 import com.food.ordering.system.payment.service.domain.exception.PaymentApplicationServiceException;
 import com.food.ordering.system.payment.service.domain.mapper.PaymentDataMapper;
 import com.food.ordering.system.payment.service.domain.ports.output.message.publisher.PaymentCancelledMessagePublisher;
@@ -14,7 +13,7 @@ import com.food.ordering.system.payment.service.domain.ports.output.message.publ
 import com.food.ordering.system.payment.service.domain.ports.output.message.publisher.PaymentFailedMessagePublisher;
 import com.food.ordering.system.payment.service.domain.ports.output.repository.CreditEntryRepository;
 import com.food.ordering.system.payment.service.domain.ports.output.repository.CreditHistoryRepository;
-import com.food.ordering.system.payment.service.domain.ports.output.repository.PaymentRespository;
+import com.food.ordering.system.payment.service.domain.ports.output.repository.PaymentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +29,7 @@ public class PaymentRequestHelper {
 
     private final PaymentDomainService paymentDomainService;
     private final PaymentDataMapper paymentDataMapper;
-    private final PaymentRespository paymentRespository;
+    private final PaymentRepository paymentRepository;
     private final CreditEntryRepository creditEntryRepository;
     private final CreditHistoryRepository creditHistoryRepository;
     private final PaymentCompletedMessagePublisher paymentCompletedEventDomainEventPublisher;
@@ -39,7 +38,7 @@ public class PaymentRequestHelper {
 
     public PaymentRequestHelper(PaymentDomainService paymentDomainService,
                                 PaymentDataMapper paymentDataMapper,
-                                PaymentRespository paymentRespository,
+                                PaymentRepository paymentRepository,
                                 CreditEntryRepository creditEntryRepository,
                                 CreditHistoryRepository creditHistoryRepository,
                                 PaymentCompletedMessagePublisher paymentCompletedEventDomainEventPublisher,
@@ -47,7 +46,7 @@ public class PaymentRequestHelper {
                                 PaymentFailedMessagePublisher paymentFailedEventDomainEventPublisher) {
         this.paymentDomainService = paymentDomainService;
         this.paymentDataMapper = paymentDataMapper;
-        this.paymentRespository = paymentRespository;
+        this.paymentRepository = paymentRepository;
         this.creditEntryRepository = creditEntryRepository;
         this.creditHistoryRepository = creditHistoryRepository;
         this.paymentCompletedEventDomainEventPublisher = paymentCompletedEventDomainEventPublisher;
@@ -77,7 +76,7 @@ public class PaymentRequestHelper {
     public PaymentEvent persistCancelPayment(PaymentRequest paymentRequest){
         log.info("Received payment cancel event for order id: {}", paymentRequest.getOrderId());
         Optional<Payment> paymentResponse =
-                paymentRespository.findByOrderId(UUID.fromString(paymentRequest.getOrderId()));
+                paymentRepository.findByOrderId(UUID.fromString(paymentRequest.getOrderId()));
 
         if (paymentResponse.isEmpty()){
             log.error("Payment with order id: {} could not be found", paymentRequest.getOrderId());
@@ -120,7 +119,7 @@ public class PaymentRequestHelper {
     }
 
     private void persistDbObject(Payment payment, List<String> failureMessages, CreditEntry creditEntry, List<CreditHistory> creditHistories) {
-        paymentRespository.save(payment);
+        paymentRepository.save(payment);
 
         if (failureMessages.isEmpty()){
             creditEntryRepository.save(creditEntry);

@@ -1,8 +1,8 @@
 package com.food.ordering.system.payment.service.domain;
 
 import com.food.ordering.system.domain.event.publisher.DomainEventPublisher;
-import com.food.ordering.system.domain.valueobjects.Money;
-import com.food.ordering.system.domain.valueobjects.PaymentStatus;
+import com.food.ordering.system.domain.valueobject.Money;
+import com.food.ordering.system.domain.valueobject.PaymentStatus;
 import com.food.ordering.system.payment.service.domain.entity.CreditEntry;
 import com.food.ordering.system.payment.service.domain.entity.CreditHistory;
 import com.food.ordering.system.payment.service.domain.entity.Payment;
@@ -89,7 +89,7 @@ public class PaymentDomainServiceImpl implements PaymentDomainService{
 
     private void updateCreditHistory(Payment payment, List<CreditHistory> creditHistories, TransactionType transactionType) {
         creditHistories.add(CreditHistory.builder()
-                        .id(new CreditHistoryId(UUID.randomUUID()))
+                        .creditHistoryId(new CreditHistoryId(UUID.randomUUID()))
                         .amount(payment.getPrice())
                         .customerId(payment.getCustomerId())
                         .transactionType(transactionType)

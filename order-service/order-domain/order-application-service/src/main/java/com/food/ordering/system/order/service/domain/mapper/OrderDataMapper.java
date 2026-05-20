@@ -1,9 +1,9 @@
 package com.food.ordering.system.order.service.domain.mapper;
 
-import com.food.ordering.system.domain.valueobjects.CustomerId;
-import com.food.ordering.system.domain.valueobjects.Money;
-import com.food.ordering.system.domain.valueobjects.ProductId;
-import com.food.ordering.system.domain.valueobjects.RestaurantId;
+import com.food.ordering.system.domain.valueobject.CustomerId;
+import com.food.ordering.system.domain.valueobject.Money;
+import com.food.ordering.system.domain.valueobject.ProductId;
+import com.food.ordering.system.domain.valueobject.RestaurantId;
 import com.food.ordering.system.order.service.domain.dto.create.CreateOrderCommand;
 import com.food.ordering.system.order.service.domain.dto.create.CreateOrderResponse;
 import com.food.ordering.system.order.service.domain.dto.create.OrderAddress;
@@ -15,7 +15,6 @@ import com.food.ordering.system.order.service.domain.entity.Restaurant;
 import com.food.ordering.system.order.service.domain.valueobject.StreetAddress;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
