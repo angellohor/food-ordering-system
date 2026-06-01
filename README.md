@@ -39,7 +39,7 @@ food-ordering-system
 - [x] Apply Domain Driven Design (DDD)
 - [x] Apply Clean Architecture & Hexagonal Architecture
 - [x] Develop Microservices Architecture using Spring Boot and Kafka
-- [ ] Implement SAGA Architecture Pattern
+- [x] Implement SAGA Architecture Pattern
 - [ ] Implement Outbox Architecture Pattern
 - [ ] Implement CQRS Architecture Pattern
 - [ ] Run a local Kubernetes cluster using Docker desktop
